@@ -1,8 +1,6 @@
 <?php
 namespace MotorK;
 
-use Prophecy\Call\CallCenter;
-
 class RateCalc extends Calculator
 {
     public function calculate()
