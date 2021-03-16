@@ -54,3 +54,80 @@ Gimme da formulaz.
  - TAEG is the effective APR (or EAPR)
  - Taeg::init(99000, 5, 661.96, 12, 20)->calculate() == 5.281%
  - __toString() should show '5.281 %'
+
+-------------------------------------------------------
+
+Users (Editors)
+Admins
+
+Users can create/update documents
+Admin can change visibility of documents
+
+class Document
+{
+    // ...
+}
+
+interface DocumentAccess
+{
+    function canEdit(Document $d): bool;
+    function canChangeVisibility(Document $d): bool;
+}
+
+// common class for users and admins
+class User
+{
+    private $documentAccess = null;
+
+/*
+    public function __construct()
+    {
+        $this->documentAccess = new DefaultDocumentAccess();
+    }
+*/
+
+    public function setAccess(DocumentAccess $da)
+    {
+        $tihs->documentAccess = $da;
+    }
+
+    public function getAccess(): ?DocumentAccess
+    {
+        return $this->documentAccess;
+    }
+}
+
+$user = new User;
+
+$canIUse = $user->getAccess()?->canEdit($doc);
+
+$canIUse = null;
+if ($user->getAccess()) {
+    $canIUse = $user->getAccess()->canEdit($doc);
+}
+
+class AdminDocumentAccess implements DocumentAccess 
+{
+    public function canEdit(Document $d): bool
+    {
+        return false;
+    }
+
+    public function canChangeVisibility(Document $d): bool
+    {
+        return true;
+    }
+}
+
+class DefaultDocumentAccess implements DocumentAccess
+{
+    public function canEdit(Document $d): bool
+    {
+        return false;
+    }
+
+    public function canChangeVisibility(Document $d): bool
+    {
+        return false;
+    }
+}
