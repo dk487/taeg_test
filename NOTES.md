@@ -79,12 +79,10 @@ class User
 {
     private $documentAccess = null;
 
-/*
     public function __construct()
     {
         $this->documentAccess = new DefaultDocumentAccess();
     }
-*/
 
     public function setAccess(DocumentAccess $da)
     {
@@ -130,4 +128,36 @@ class DefaultDocumentAccess implements DocumentAccess
     {
         return false;
     }
+}
+
+-------------------------------------------------------------
+
+class ExternalDataSource {
+    public function loadSomething() {
+        // ...
+    }
+}
+
+class DataHandler {
+    private $source;
+    public function __construct($dataSource) { }
+    public function doSomethingImportant() {
+        $d = $this->source->loadSomething();
+        // ...
+    }
+}
+
+class MockDataSource extends ExternalDataSource
+{
+    public $fixture;
+    public function loadSomething() {
+        return $this->fixture;
+    }
+}
+
+class TestDataHandler {
+    $m = new MockDataSource;
+    $m->fixture = 'predefined value';
+    $h = new DataHandler($m);
+    // ..
 }
